@@ -8,7 +8,7 @@ const router = express.Router();
 
 // CRUD Endpoints
 
-// GET /api/cars endpoint to READ/RETRIEVE cars -
+// GET /api/cars endpoint to READ/RETRIEVE cars - FUNCTIONING
 router.get('/', (req, res) => {
   db('cars')
     .then(cars => {
@@ -23,14 +23,25 @@ router.get('/', (req, res) => {
 // GET /api/cars/:id endpoint to READ/RETRIEVE car by ID -
 router.get('/:id', (req, res) => {});
 
-// POST /api/cars endpoint to CREATE a car -
-router.post('/', (req, res) => {});
+// POST /api/cars endpoint to CREATE a car - FUNCTIONING
+router.post('/', validateCar, (req, res) => {
+  db('cars')
+    .insert(req.body, 'id')
+    .then(ids => {
+      console.log(ids);
+      res.status(201).json({ newCar: ids[0] });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ message: 'Error creating car' });
+    });
+});
 
 // **********************************************************************
 
 // Custom Middleware
 
-// Validate body on create/update car request - NEEDS TESTING
+// Validate body on create/update car request - FUNCTIONING
 function validateCar(req, res, next) {
   if (!Object.keys(req.body).length) {
     res.status(400).json({ message: 'Missing car data!' });
