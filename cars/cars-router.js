@@ -52,7 +52,23 @@ router.post('/', validateCar, (req, res) => {
     });
 });
 
-// PUT /api/cars/:id endpoint to UPDATE a car -
+// PUT /api/cars/:id endpoint to UPDATE a car - FUNCTIONING
+router.put('/:id', validateCar, (req, res) => {
+  db('cars')
+    .where({ id: req.params.id })
+    .update(req.body)
+    .then(count => {
+      if (count) {
+        res.status(200).json({ message: 'The car has been updated' });
+      } else {
+        res.status(404).json({ message: 'Invalid car ID' });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ message: 'Error updating the car' });
+    });
+});
 
 // DELETE /api/cars/:id endpoint to DELETE a car - FUNCTIONING
 router.delete('/:id', (req, res) => {
