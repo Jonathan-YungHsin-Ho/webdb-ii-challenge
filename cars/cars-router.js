@@ -52,6 +52,26 @@ router.post('/', validateCar, (req, res) => {
     });
 });
 
+// PUT /api/cars/:id endpoint to UPDATE a car -
+
+// DELETE /api/cars/:id endpoint to DELETE a car - FUNCTIONING
+router.delete('/:id', (req, res) => {
+  db('cars')
+    .where({ id: req.params.id })
+    .del()
+    .then(count => {
+      if (count) {
+        res.status(200).json({ message: 'The car has been deleted' });
+      } else {
+        res.status(404).json({ message: 'Invalid car ID' });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ message: 'Error deleting the car' });
+    });
+});
+
 // **********************************************************************
 
 // Custom Middleware
