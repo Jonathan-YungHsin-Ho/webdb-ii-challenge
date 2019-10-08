@@ -20,8 +20,23 @@ router.get('/', (req, res) => {
     });
 });
 
-// GET /api/cars/:id endpoint to READ/RETRIEVE car by ID -
-router.get('/:id', (req, res) => {});
+// GET /api/cars/:id endpoint to READ/RETRIEVE car by ID - FUNCTIONING
+router.get('/:id', (req, res) => {
+  db('cars')
+    .where({ id: req.params.id })
+    .first()
+    .then(car => {
+      if (car) {
+        res.status(200).json(car);
+      } else {
+        res.status(404).json({ message: 'Invalid car ID' });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ message: 'Error retrieving the car' });
+    });
+});
 
 // POST /api/cars endpoint to CREATE a car - FUNCTIONING
 router.post('/', validateCar, (req, res) => {
